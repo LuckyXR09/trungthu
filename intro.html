@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trung Thu - Intro</title>
+<style>
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Segoe UI", sans-serif;
+  color: white;
+}
+
+/* Video nền */
+#bgVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Lá anh đào */
+.petal {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: pink;
+  border-radius: 50% 50% 0 50%;
+  opacity: 0.8;
+  animation: fall 8s linear infinite;
+  z-index: 1;
+}
+
+@keyframes fall {
+  0% {transform: translateY(-10%) rotate(0deg);}
+  100% {transform: translateY(110vh) rotate(360deg);}
+}
+
+/* Container chữ trung tâm */
+.container {
+  position: absolute;
+  top: 10%; /* chỉnh gần đầu */
+  width: 100%;
+  text-align: center;
+  z-index: 2;
+}
+
+h1 {
+  font-size: 2.5em;
+  text-shadow: 0 0 10px #fff, 0 0 20px pink;
+  margin: 0;
+}
+
+/* Số đếm góc trên */
+#countdown {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 2em;
+  z-index: 2;
+  text-shadow: 0 0 5px #000;
+}
+</style>
+</head>
+<body>
+
+<video id="bgVideo" autoplay loop muted>
+  <source src="cuaintro1.mp4" type="video/mp4">
+</video>
+
+<div class="container">
+  <h1>Bạn đã sẵn sàng vào trang chính chưa?🤔🤔🤔Chuẩn bị nhé!😀😀😀</h1>
+</div>
+
+<div id="countdown">20</div>
+
+<script>
+// Lá anh đào rơi
+for(let i=0;i<15;i++){
+  let petal=document.createElement("div");
+  petal.classList.add("petal");
+  petal.style.left=Math.random()*100+"%";
+  petal.style.animationDelay=Math.random()*5+"s";
+  petal.style.background=`rgba(255,${100+Math.random()*100},${150+Math.random()*100},0.8)`;
+  document.body.appendChild(petal);
+}
+
+// Đếm ngược 20 giây
+let timeLeft = 20;
+const countdown = document.getElementById('countdown');
+const interval = setInterval(()=>{
+  timeLeft--;
+  countdown.textContent = timeLeft;
+  if(timeLeft <= 0){
+    clearInterval(interval);
+    window.location.href = "chinh.html";
+  }
+},1000);
+</script>
+
+</body>
+</html>

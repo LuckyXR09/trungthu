@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chúc Trung Thu Vui Vẻ!</title>
+<style>
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Segoe UI", sans-serif;
+  color: white;
+}
+
+/* Video nền */
+#bgVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Pháo hoa canvas */
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+/* Chữ + credit */
+h1 {
+  text-align: center;
+  position: absolute;
+  top: 10%;
+  width: 100%;
+  font-size: 3em;
+  text-shadow: 0 0 15px #fff, 0 0 30px #ff4d6d;
+  z-index: 5;
+}
+.credit {
+  position: absolute;
+  bottom: 5px;
+  right: 15px;
+  font-size: 0.8em;
+  opacity: 0.15;
+  z-index: 5;
+}
+
+/* Lá anh đào */
+.petal {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: pink;
+  border-radius: 50% 50% 0 50%;
+  opacity: 0.8;
+  animation: fall 8s linear infinite;
+  z-index: 5;
+}
+@keyframes fall {
+  0% {transform: translateY(-10%) rotate(0deg);}
+  100% {transform: translateY(110vh) rotate(360deg);}
+}
+
+/* Nút nhạc */
+#playMusic {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 5;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<video autoplay muted loop id="bgVideo">
+  <source src="chinh5.mp4" type="video/mp4">
+</video>
+
+<canvas id="fireworks"></canvas>
+
+<h1>Chúc M Trung Thu Vui Vẻ!😀😀😀</h1>
+<div class="credit">–by–thằng cùng bàn–</div>
+<button id="playMusic">Bật nhạc ở đây 😀</button>
+
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// Pháo hoa
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+let particles = [];
+
+function random(min,max){ return Math.random()*(max-min)+min; }
+
+function createFirework(x, y){
+  const count = 80;
+  for(let i=0;i<count;i++){
+    const angle = (Math.PI*2)/count*i;
+    const speed = random(1,5);
+    particles.push({x:x,y:y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:100});
+  }
+}
+
+function loop(){
+  requestAnimationFrame(loop);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.02;
+    p.life--;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,2,0,Math.PI*2);
+    ctx.fillStyle = `hsl(${p.life*3},100%,60%)`;
+    ctx.fill();
+    if(p.life <= 0) particles.splice(i,1);
+  });
+}
+loop();
+
+// Lá anh đào
+for(let i=0;i<20;i++){
+  let petal=document.createElement("div");
+  petal.classList.add("petal");
+  petal.style.left = Math.random()*100+"%";
+  petal.style.animationDelay = Math.random()*5+"s";
+  petal.style.background = `rgba(255,${100+Math.random()*100},${150+Math.random()*100},0.8)`;
+  document.body.appendChild(petal);
+}
+
+// Nhạc
+const bgMusic = document.getElementById("bgMusic");
+const playBtn = document.getElementById("playMusic");
+playBtn.addEventListener("click", () => {
+  bgMusic.play();
+  playBtn.style.display = "none";
+});
+
+// Pháo hoa nhấn Space
+document.addEventListener("keydown", (e)=>{
+  if(bgMusic.paused) bgMusic.play(); // bật nhạc nếu chưa chạy
+  if(e.code === "Space"){
+    createFirework(random(100,canvas.width-100), random(50,canvas.height/2));
+  }
+});
+</script>
+
+</body>
+</html>
